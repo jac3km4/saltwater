@@ -10,21 +10,21 @@ path = "lib.rs"
 
 [dependencies]
 lazy_static = "1"
-arcstr = "0.2.2"
+arcstr = "1"
 hexponent = "0.3"
 thiserror = "^1.0.10"
-target-lexicon = "0.10"
-lasso = "0.2"
+target-lexicon = "0.12"
+lasso = "0.6"
 codespan = { version = ">=0.9.5", default-features = false }
-counter = "0.4"
+counter = "0.5"
 shared_str = "0.1.1"
-time = "0.2"
-cranelift-codegen = { version = "0.66", optional = true }
-cranelift-object = { version = "0.66", optional = true }
+time = { version = "0.3", features = ["local-offset", "formatting", "macros"] }
+cranelift-codegen = { version = "0.82", optional = true }
+cranelift-object = { version = "0.82", optional = true }
 
 [dev-dependencies]
-proptest = "^0.9.6"
-proptest-derive = "0.1"
+proptest = "1"
+proptest-derive = "0.3"
 
 [features]
 codegen = ["cranelift-codegen", "cranelift-object"]

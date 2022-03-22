@@ -30,6 +30,7 @@ use std::borrow::Cow;
 use std::collections::{HashMap, VecDeque};
 use std::convert::TryFrom;
 use std::path::{Path, PathBuf};
+use time::macros::format_description;
 
 use super::files::FileProcessor;
 use super::replace::{replace, replace_iter, Definition, Definitions};
@@ -326,7 +327,9 @@ impl<'a> PreProcessor<'a> {
             TARGET.architecture, TARGET.operating_system, TARGET.environment
         );
 
-        let now = time::OffsetDateTime::now_local();
+        let now = time::OffsetDateTime::now_local().unwrap();
+        let time_desc = format_description!("[hour]:[minute]:[second]");
+        let date_desc = format_description!("[day] [month] [year]");
 
         #[allow(clippy::inconsistent_digit_grouping)]
         let mut definitions = map! {
@@ -339,8 +342,8 @@ impl<'a> PreProcessor<'a> {
             "__STDC_NO_COMPLEX__".into() => int_def(1),
             "__STDC_NO_THREADS__".into() => int_def(1),
             "__STDC_NO_VLA__".into() => int_def(1),
-            "__DATE__".into() => str_def(&now.format("%b %_d %Y")),
-            "__TIME__".into() => str_def(&now.format("%H:%M:%S")),
+            "__DATE__".into() => str_def(&now.format(date_desc).unwrap()),
+            "__TIME__".into() => str_def(&now.format(time_desc).unwrap()),
         };
         definitions.extend(user_definitions);
         let mut search_path = vec![
@@ -611,7 +614,7 @@ impl<'a> PreProcessor<'a> {
             Start,
             SawParen,
             SawId(InternedStr),
-        };
+        }
         use State::*;
         let mut state = Start;
         loop {
